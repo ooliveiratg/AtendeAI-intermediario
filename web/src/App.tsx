@@ -61,8 +61,8 @@ console.log("CURRENT USER:", auth.currentUser?.email);
     }
   }
   useEffect(() => {
-    login();
-  }, [userAuth]);
+    void login();
+  }, []);
 
   return (
     <div
