@@ -17,12 +17,15 @@ export const ping = onCall(() => {
  * dependendo do nível do teste que você recebeu.
  */
 export const listAtendimentos = onCall(async (request) => {
-  const tenantId = request.data?.tenantId;
+  console.log("TEEEEEEEEEEEEEEEESTE: ",request.auth)
 
+  console.log("DATTAAAAA: ",request.data)
+  const tenantId = request.data?.tenantId;
+  console.log("TEEEEEEEEEEEEEEEESTE: ",request.auth)
   if (!tenantId || typeof tenantId !== "string") {
     throw new HttpsError("invalid-argument", "tenantId é obrigatório.");
   }
-
+  console.log("TEEEEEEEEEEEEEEEESTE: ",request.auth)
   const snapshot = await db
     .collection("atendimentos")
     .where("tenantId", "==", tenantId)
