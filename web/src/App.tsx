@@ -5,7 +5,6 @@ import {
   IdTokenResult,
   signInWithEmailAndPassword,
   signOut,
-  UserCredential,
 } from "firebase/auth";
 
 type Atendimento = {
@@ -61,8 +60,8 @@ console.log("CURRENT USER:", auth.currentUser?.email);
     }
   }
   useEffect(() => {
-    login();
-  }, [userAuth]);
+    void login();
+  }, []);
 
   return (
     <div
