@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import { getAuth } from "firebase-admin/auth";
 import "../admin";
-import { HttpsError } from "firebase-functions/v2/https";
 
 async function seedAuth() {
   const usuarios = [
