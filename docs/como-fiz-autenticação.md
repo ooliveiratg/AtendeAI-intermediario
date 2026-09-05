@@ -1,6 +1,6 @@
 # Como eu fiz a autenticação?
 
-Eu comecei analisando o código que já existia e percebi que o principal problema era o tenantId vindo diretamente do cliente. Entendi que isso quebrava o isolamento entre tenants.
+Comecei analisando o código existente e lendo a documentação do teste para entender os requisitos. Durante essa análise, identifiquei que o principal problema de segurança estava no tenantId, que era recebido diretamente pelo cliente. Isso permitia que um usuário pudesse informar outro tenantId e potencialmente acessar dados de outro tenant, quebrando o isolamento entre eles.
 
 Usei IA principalmente como apoio para entender como implementar isso com Firebase Auth, principalmente custom claims e o Authentication Emulator. Também usei para interpretar alguns erros que apareceram durante a configuração.
 

@@ -1,0 +1,134 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(37, 99, 235, 0.16),
+      transparent 32%
+    ),
+    linear-gradient(135deg, #111827 0%, #020617 100%);
+}
+
+.login-card {
+  width: min(100%, 420px);
+  padding: 40px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 20px;
+  background: rgba(15, 23, 42, 0.82);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+}
+
+.login-heading {
+  margin-bottom: 32px;
+}
+
+.login-eyebrow {
+  display: block;
+  margin-bottom: 12px;
+  color: #60a5fa;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.login-heading h1 {
+  color: #f8fafc;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.login-heading p {
+  margin-top: 10px;
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+.login-form {
+  display: grid;
+  gap: 20px;
+}
+
+.field-group {
+  display: grid;
+  gap: 8px;
+}
+
+.field-group label {
+  color: #cbd5e1;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.field-group input {
+  width: 100%;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: #f8fafc;
+  background: #0f172a;
+  font: inherit;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.field-group input::placeholder {
+  color: #64748b;
+}
+
+.field-group input:hover {
+  border-color: #475569;
+}
+
+.field-group input:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.16);
+}
+
+.login-error {
+  margin-top: -4px;
+  color: #fca5a5;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.login-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 13px 16px;
+  color: #eff6ff;
+  background: #2563eb;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.login-button:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.login-button:focus-visible {
+  outline: 3px solid rgba(147, 197, 253, 0.7);
+  outline-offset: 2px;
+}
+
+.login-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 28px 22px;
+  }
+}

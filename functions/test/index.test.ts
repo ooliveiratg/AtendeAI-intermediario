@@ -1,5 +1,6 @@
 import * as admin from "firebase-admin";
 
+
 // Garante um único app inicializado apontando para o emulador
 // (FIRESTORE_EMULATOR_HOST é definido no script "npm test").
 if (admin.apps.length === 0) {

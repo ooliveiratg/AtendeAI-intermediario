@@ -53,7 +53,6 @@ export const resumoPorTenant = onCall(async (request) => {
   const snapshot = await db
     .collection("atendimentos")
     .where("tenantId", "==", tenantId)
-
     .get();
 
   const resumo = {

@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { httpsCallable } from "firebase/functions";
 import { auth, functions } from "./firebase";
-import {
-  IdTokenResult,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 type Atendimento = {
   id: string;
@@ -16,37 +13,15 @@ type Atendimento = {
 
 export default function App() {
   const [atendimentos, setAtendimentos] = useState<Atendimento[]>([]);
-  const [userAuth, setUserAuth] = useState<IdTokenResult | null>(null);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
- console.log("ANTES DO LOGIN:", auth.currentUser?.email);
-  async function login() {
-    try {
-     await signOut(auth);
+  const [token, setToken] = useState<string>("");
 
-      const credentials = await signInWithEmailAndPassword(
-        auth,
-        "algo@teste.local",
-        "12345678",
-      );
-      console.log(credentials)
-      await credentials.user.getIdToken(true);
-      const token = await credentials.user.getIdTokenResult();
-      console.log("CLAIMS:", token.claims);
-      console.log("TENANT:", token.claims.tenantId);
-console.log("DEPOIS DO LOGIN:", credentials.user.email);
-      setUserAuth(token);
-      console.log("Usuário autenticado!");
-    } catch (e) {
-      setErro(e instanceof Error ? e.message : "Erro desconhecido");
-    }
-  }
-
-console.log("CURRENT USER:", auth.currentUser?.email);
+  const navigate = useNavigate();
   async function carregar() {
-    console.log("USUÁRIO NO CARREGAR:", auth.currentUser?.email);
     setCarregando(true);
     setErro(null);
+
     try {
       const listAtendimentos = httpsCallable(functions, "listAtendimentos");
       const resp = await listAtendimentos({});
@@ -59,8 +34,21 @@ console.log("CURRENT USER:", auth.currentUser?.email);
       setCarregando(false);
     }
   }
+
+  async function logout() {
+    await signOut(auth);
+    navigate("/");
+  }
+
   useEffect(() => {
-    void login();
+    async function getTenant() {
+      const user = auth.currentUser;
+
+      const token = await user?.getIdTokenResult();
+      const tenantId = token?.claims.tenantId as string;
+      setToken(tenantId);
+    }
+    getTenant();
   }, []);
 
   return (
@@ -69,9 +57,12 @@ console.log("CURRENT USER:", auth.currentUser?.email);
     >
       <h1>AtendeAI — projeto de teste</h1>
       <p>
-        Tenant: <code>{userAuth?.claims.tenantId as string}</code>{" "}
+        Tenant: <code>{token ? token : ""}</code>{" "}
         <button onClick={carregar} disabled={carregando}>
           {carregando ? "carregando..." : "carregar atendimentos"}
+        </button>{"  "}
+        <button onClick={logout}>
+          <p> logout </p>
         </button>
       </p>
       {erro && <p style={{ color: "red" }}>{erro}</p>}
