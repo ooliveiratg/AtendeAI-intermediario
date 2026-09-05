@@ -4,7 +4,7 @@ import { getAuth, connectAuthEmulator } from "firebase/auth";
 
 const app = initializeApp({
   projectId: "atendeai-teste-local",
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  apiKey: "demo-api-key",
 });
 
 export const functions = getFunctions(app);
