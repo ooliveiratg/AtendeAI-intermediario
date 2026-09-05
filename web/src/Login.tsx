@@ -8,6 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { auth } from "./firebase";
 import "./Login.css";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -15,36 +16,34 @@ export default function Login() {
   const [senha, setSenha] = useState("");
   const [carregando, setCarregando] = useState(false);
   const [userAuth, setUserAuth] = useState<IdTokenResult | null>(null);
-  const [erro, setErro] = useState("");
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        navigate("/atendimentos", { replace: true });
-      }
-    });
-
-    return unsubscribe;
-  }, [navigate]);
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    setCarregando(true);
     try {
-      await signOut(auth);
-
       const credentials = await signInWithEmailAndPassword(auth, email, senha);
-      console.log(credentials);
       await credentials.user.getIdToken(true);
+
       const token = await credentials.user.getIdTokenResult();
+
       setUserAuth(token);
-      navigate("/atendimentos", {
-        state: { tenantId: userAuth?.claims.tenantId as string },
-      });
-      
-      console.log("Usuário autenticado!");
+      setCarregando(false);
+
+      navigate("/atendimentos");
+      toast.success("Login realizado com sucesso!");
+
     } catch (e) {
-      setErro(e instanceof Error ? e.message : "Erro desconhecido");
+      setCarregando(false);
+      toast.error(e instanceof Error ? e.message : "Erro desconhecido");
     }
   };
+  useEffect(() => {
+    async function logout() {
+      await signOut(auth);
+      navigate("/");
+    }
+    logout();
+  }, []);
 
   return (
     <main className="login-page">
@@ -55,7 +54,7 @@ export default function Login() {
           <p>Acesse sua conta para continuar</p>
         </div>
 
-        <form className="login-form" onSubmit={() => {}}>
+        <form className="login-form" onSubmit={handleSubmit}>
           <div className="field-group">
             <label htmlFor="email">E-mail</label>
             <input
@@ -83,12 +82,6 @@ export default function Login() {
               required
             />
           </div>
-
-          {erro && (
-            <p className="login-error" role="alert">
-              {erro}
-            </p>
-          )}
 
           <button className="login-button" type="submit" disabled={carregando}>
             {carregando ? "Entrando..." : "Entrar"}

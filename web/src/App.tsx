@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { httpsCallable } from "firebase/functions";
 import { auth, functions } from "./firebase";
+import { IdTokenResult } from "firebase/auth";
 
 type Atendimento = {
   id: string;
@@ -11,13 +12,18 @@ type Atendimento = {
 
 export default function App() {
   const [atendimentos, setAtendimentos] = useState<Atendimento[]>([]);
-  
+
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+  const [token, setToken] = useState<string>("");
   async function carregar() {
-    console.log("USUÁRIO NO CARREGAR:", auth.currentUser?.email);
     setCarregando(true);
     setErro(null);
+    const user = auth.currentUser;
+
+    const token = await user?.getIdTokenResult();
+    const tenantId = token?.claims.tenantId as string;
+    setToken( tenantId );
     try {
       const listAtendimentos = httpsCallable(functions, "listAtendimentos");
       const resp = await listAtendimentos({});
@@ -37,7 +43,7 @@ export default function App() {
     >
       <h1>AtendeAI — projeto de teste</h1>
       <p>
-        Tenant: <code>{}</code>{" "}
+        Tenant: <code>{token ? token : ""}</code>{" "}
         <button onClick={carregar} disabled={carregando}>
           {carregando ? "carregando..." : "carregar atendimentos"}
         </button>
