@@ -1,7 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import {
   IdTokenResult,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
