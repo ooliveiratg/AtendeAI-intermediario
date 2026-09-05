@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { httpsCallable } from "firebase/functions";
 import { auth, functions } from "./firebase";
-import { IdTokenResult } from "firebase/auth";
 
 type Atendimento = {
   id: string;
@@ -19,11 +18,7 @@ export default function App() {
   async function carregar() {
     setCarregando(true);
     setErro(null);
-    const user = auth.currentUser;
 
-    const token = await user?.getIdTokenResult();
-    const tenantId = token?.claims.tenantId as string;
-    setToken( tenantId );
     try {
       const listAtendimentos = httpsCallable(functions, "listAtendimentos");
       const resp = await listAtendimentos({});
@@ -36,6 +31,17 @@ export default function App() {
       setCarregando(false);
     }
   }
+
+  useEffect(() => {
+    async function getTenant() {
+      const user = auth.currentUser;
+
+      const token = await user?.getIdTokenResult();
+      const tenantId = token?.claims.tenantId as string;
+      setToken(tenantId);
+    }
+    getTenant()
+  },[]);
 
   return (
     <div
