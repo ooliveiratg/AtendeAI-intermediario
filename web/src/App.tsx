@@ -5,7 +5,6 @@ import {
   IdTokenResult,
   signInWithEmailAndPassword,
   signOut,
-  UserCredential,
 } from "firebase/auth";
 
 type Atendimento = {
