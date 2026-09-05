@@ -1,6 +1,5 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { db } from "./admin";
-import { request } from "http";
 
 /**
  * Function de exemplo — só para você confirmar que o ambiente está rodando.
