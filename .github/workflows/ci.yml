@@ -17,6 +17,8 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run build
+      - run: npx firebase-tools emulators:start --only firestore --config ../firebase.json &
+      - run: sleep 5
       - run: npm test
 
   web:
