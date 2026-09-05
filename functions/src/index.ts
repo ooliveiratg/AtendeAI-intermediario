@@ -1,5 +1,6 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { db } from "./admin";
+import { request } from "http";
 
 /**
  * Function de exemplo — só para você confirmar que o ambiente está rodando.
@@ -17,12 +18,16 @@ export const ping = onCall(() => {
  * dependendo do nível do teste que você recebeu.
  */
 export const listAtendimentos = onCall(async (request) => {
-  console.log(request)
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "tenant precisa estar autenticado.",
+    );
+  }
   const tenantId = request.auth?.token.tenantId;
-  console.log(tenantId)
 
   if (!tenantId || typeof tenantId !== "string") {
-    throw new HttpsError("invalid-argument", "tenantId é obrigatório.");
+    throw new HttpsError("invalid-argument", "Usuário não possui tenantId.");
   }
   const snapshot = await db
     .collection("atendimentos")
@@ -34,15 +39,65 @@ export const listAtendimentos = onCall(async (request) => {
   };
 });
 
+export const resumoPorTenant = onCall(async (request) => {
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "tenant precisa estar autenticado.",
+    );
+  }
+  const tenantId = request.auth?.token.tenantId;
+
+  if (!tenantId || typeof tenantId !== "string") {
+    throw new HttpsError("invalid-argument", "Usuário não possui tenantId.");
+  }
+  const snapshot = await db
+    .collection("atendimentos")
+    .where("tenantId", "==", tenantId)
+
+    .get();
+
+  const resumo = {
+    novo: 0,
+    pendente: 0,
+    resolvido: 0,
+  };
+
+  snapshot.forEach((doc) => {
+    const status = doc.data().status;
+
+    if (status === "novo") {
+      resumo.novo++;
+    }
+
+    if (status === "pendente") {
+      resumo.pendente++;
+    }
+
+    if (status === "resolvido") {
+      resumo.resolvido++;
+    }
+  });
+
+  return resumo;
+});
+
 /**
  * Cria um novo registro de atendimento para um tenant.
  * Implementação mínima — sem validação de schema.
  */
 export const createAtendimento = onCall(async (request) => {
-  const { tenantId, transcricao, duracaoSegundos } = request.data ?? {};
+  if (!request.auth) {
+    throw new HttpsError(
+      "unauthenticated",
+      "tenant precisa estar autenticado.",
+    );
+  }
+  const tenantId = request.auth?.token.tenantId;
+  const { transcricao, duracaoSegundos } = request.data ?? {};
 
   if (!tenantId || typeof tenantId !== "string") {
-    throw new HttpsError("invalid-argument", "tenantId é obrigatório.");
+    throw new HttpsError("invalid-argument", "Usuário não possui tenantId.");
   }
 
   const doc = await db.collection("atendimentos").add({
