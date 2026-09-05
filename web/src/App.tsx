@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { httpsCallable } from "firebase/functions";
 import { auth, functions } from "./firebase";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 type Atendimento = {
   id: string;
@@ -11,10 +13,11 @@ type Atendimento = {
 
 export default function App() {
   const [atendimentos, setAtendimentos] = useState<Atendimento[]>([]);
-
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [token, setToken] = useState<string>("");
+
+  const navigate = useNavigate();
   async function carregar() {
     setCarregando(true);
     setErro(null);
@@ -32,6 +35,11 @@ export default function App() {
     }
   }
 
+  async function logout() {
+    await signOut(auth);
+    navigate("/");
+  }
+
   useEffect(() => {
     async function getTenant() {
       const user = auth.currentUser;
@@ -40,8 +48,8 @@ export default function App() {
       const tenantId = token?.claims.tenantId as string;
       setToken(tenantId);
     }
-    getTenant()
-  },[]);
+    getTenant();
+  }, []);
 
   return (
     <div
@@ -52,6 +60,9 @@ export default function App() {
         Tenant: <code>{token ? token : ""}</code>{" "}
         <button onClick={carregar} disabled={carregando}>
           {carregando ? "carregando..." : "carregar atendimentos"}
+        </button>{"  "}
+        <button onClick={logout}>
+          <p> logout </p>
         </button>
       </p>
       {erro && <p style={{ color: "red" }}>{erro}</p>}

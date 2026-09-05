@@ -37,13 +37,6 @@ export default function Login() {
       toast.error(e instanceof Error ? e.message : "Erro desconhecido");
     }
   };
-  useEffect(() => {
-    async function logout() {
-      await signOut(auth);
-      navigate("/");
-    }
-    logout();
-  }, []);
 
   return (
     <main className="login-page">
