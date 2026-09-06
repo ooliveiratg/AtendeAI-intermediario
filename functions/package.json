@@ -7,7 +7,7 @@
     "node": "20"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && cp -r lib/src/* lib/ && rm -rf lib/src lib/test",
     "build:watch": "tsc --watch",
     "seed": "cross-env FIRESTORE_EMULATOR_HOST=localhost:8080 ts-node src/seed.ts",
     "seed:auth": "cross-env FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 ts-node src/auth/seedAuth.ts",
