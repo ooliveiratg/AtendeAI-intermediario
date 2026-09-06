@@ -7,3 +7,11 @@ Usei IA principalmente como apoio para entender como implementar isso com Fireba
 A solução que implementei foi criar usuários de teste no Auth Emulator, colocar o tenantId como custom claim.
 
 Eu não usei a IA simplesmente para gerar o projeto inteiro. Fui implementando, executando e testando as alterações, e usei a IA para tirar dúvidas, revisar decisões e me ajudar a resolver os problemas que apareceram.
+
+
+## Como criar os usuários de teste
+
+Na pasta `functions`:
+
+```bash
+npx ts-node src/seedAuth/seed-auth.ts
