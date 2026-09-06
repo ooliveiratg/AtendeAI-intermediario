@@ -9,8 +9,9 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "seed": "ts-node src/seed.ts",
-    "test": "FIRESTORE_EMULATOR_HOST=localhost:8080 jest --runInBand"
+    "seed": "cross-env FIRESTORE_EMULATOR_HOST=localhost:8080 ts-node src/seed.ts",
+    "seed:auth": "cross-env FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 ts-node src/auth/seedAuth.ts",
+    "test": "cross-env FIRESTORE_EMULATOR_HOST=localhost:8080 FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 FUNCTIONS_EMULATOR_HOST=localhost:5001 jest --runInBand"
   },
   "dependencies": {
     "firebase-admin": "^12.6.0",
@@ -19,6 +20,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^20.16.10",
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0",
     "ts-jest": "^29.4.12",
     "ts-node": "^10.9.2",
