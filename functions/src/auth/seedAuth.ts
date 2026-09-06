@@ -2,7 +2,7 @@
 import { getAuth } from "firebase-admin/auth";
 import "../admin";
 
-async function seedAuth() {
+export async function seedAuth() {
   const usuarios = [
     {
       tenantId: "tenant-alfa",
@@ -40,7 +40,9 @@ async function seedAuth() {
   }
 }
 
-seedAuth().catch((err) => {
-  console.error("Erro ao autenticar:", err);
-  process.exit(1);
-});
+if (require.main === module) {
+  seedAuth().catch((err) => {
+    console.error("Erro ao autenticar:", err);
+    process.exit(1);
+  });
+}
